@@ -42,6 +42,7 @@ flags.DEFINE_float('learning_rate', 1e-3, 'learning rate')
 flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weights` file if different, '
                      'useful in transfer learning with different number of classes')
+flags.DEFINE_integer('patience', 3, 'patience')
 
 
 def main(_argv):
@@ -178,8 +179,8 @@ def main(_argv):
 
         callbacks = [
             ReduceLROnPlateau(verbose=1),
-            EarlyStopping(patience=3, verbose=1),
-            ModelCheckpoint('checkpoints/yolov3_train_{epoch}.tf',
+            EarlyStopping(patience=FLAGS.patience, verbose=1),
+            ModelCheckpoint('checkpoints/yolov3_train_best.tf', monitor='val_loss', save_best_only=True,
                             verbose=1, save_weights_only=True),
             TensorBoard(log_dir='logs')
         ]
