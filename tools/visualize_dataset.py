@@ -15,13 +15,14 @@ flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_string(
     'dataset', './data/voc2012_train.tfrecord', 'path to dataset')
 flags.DEFINE_string('output', './output.jpg', 'path to output image')
+flags.DEFINE_integer('yolo_max_boxes', 100, 'yolo_max_boxes')
 
 
 def main(_argv):
     class_names = [c.strip() for c in open(FLAGS.classes).readlines()]
     logging.info('classes loaded')
 
-    dataset = load_tfrecord_dataset(FLAGS.dataset, FLAGS.classes, FLAGS.size)
+    dataset = load_tfrecord_dataset(FLAGS.dataset, FLAGS.classes, FLAGS.size, FLAGS.yolo_max_boxes)
     dataset = dataset.shuffle(512)
 
     for image, labels in dataset.take(1):
