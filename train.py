@@ -46,6 +46,7 @@ flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weight
                      'useful in transfer learning with different number of classes')
 flags.DEFINE_integer('patience', 3, 'patience')
 flags.DEFINE_string('output_path', './checkpoints', 'Output path for the checkpoints')
+flags.DEFINE_float('ignore_threshold', 0.15, 'Set the ignore threshold value for the Loss function')
 
 
 def main(_argv):
@@ -126,7 +127,7 @@ def main(_argv):
             freeze_all(model)
 
     optimizer = tf.keras.optimizers.Adam(lr=FLAGS.learning_rate)
-    loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes)
+    loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes, ignore_threshold=FLAGS.ignore_threshold)
             for mask in anchor_masks]
 
     if FLAGS.mode == 'eager_tf':
